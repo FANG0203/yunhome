@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>签约</title>
+    <style>
+        .form-div {
+            margin-bottom: 20px;
+        }
+        .demo-input {
+            padding-left: 10px;
+            height: 38px;
+            min-width: 262px;
+            line-height: 38px;
+            border: 1px solid #e6e6e6;
+            background-color: #fff;
+            border-radius: 2px;
+        }
+        .hp-bt{
+            padding: 15px 35px;
+            border: navajowhite;
+            background-color: #2196f3;
+            color: white;
+            border-radius: 5px;
+        }
+        form{
+            padding: 20px 100px;
+        }
+    </style>
+    <script src="/lib/amazeui/assets/js/jquery.min.js"></script>
+    <script src="/lib/laydate/laydate.js"></script>
+    <script src="/lib/layer/layer.js"></script>
+</head>
+<body>
+<form>
+    <input type="hidden" name="homeId" th:value="${param.homeId}">
+    <input type="hidden" name="userId" th:value="${param.userId}">
+    <input type="hidden" name="contractId" th:value="${contract.id}">
+    <div class="form-div">
+        <input type="text" class="demo-input" placeholder="请选择日期" id="test1">
+        <input name="startTime" id="startTime" type="hidden">
+        <input name="endTime" id="endTime" type="hidden">
+    </div>
+    <div class="form-div">
+        <label th:text="${contract.contractContext}">
+
+        </label>
+    </div>
+    <div class="form-div">
+        <input type="button" value="签约" class="hp-bt">
+    </div>
+</form>
+<script>
+    $(function () {
+        $('.hp-bt').click(function () {
+            let val = $('#test1').val();
+            if(val==""){
+                layer.msg('日期不能为空', {icon: 2});
+                return;
+            }
+            let arr = val.split(" - ");
+            $('#startTime').val(arr[0]);
+            $('#endTime').val(arr[1]);
+
+
+            let data = $('form').serialize();
+            $.post('/yunhome/home/signing', data, function (e) {
+                if (e == "ok") {
+                    //关闭窗口
+                    var index = parent.layer.getFrameIndex(window.name); //先得到当前iframe层的索引
+                    parent.layer.close(index); //再执行关闭
+                    parent.$(".home-container").load("/personal_center_");
+                }
+            })
+        })
+
+        laydate.render({
+            elem: '#test1'
+            , range: ['#test-startDate-1', '#test-endDate-1']
+        });
+    })
+</script>
+</body>
+</html>

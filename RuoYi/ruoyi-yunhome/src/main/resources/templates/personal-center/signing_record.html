@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>签约记录</title>
+    <style>
+        .hp-list{
+            display: flex;
+            padding: 15px;
+            background-color: white;
+            margin-bottom: 15px;
+        }
+        .hp-list-item{
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            text-align: center;
+            align-items: center;
+            justify-content: center;
+        }
+        .hp-list-item:first-child{
+            flex: 2;
+        }
+        .hp-list-item:first-child label{
+            max-width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .hp-list-item img{
+            width: 150px;
+        }
+        .hp-list:not(:first-child) label{
+            font-weight: 100;
+        }
+        .card-right{
+            background-color: #eeeeee;
+        }
+    </style>
+    <script src="/lib/amazeui/pagination/amazeui-pagination.js"></script>
+</head>
+<body>
+<div>
+    <div class="hp-list">
+        <div class="hp-list-item">
+            <label>房源图片</label>
+        </div>
+        <div class="hp-list-item">
+            <label>房源标题</label>
+        </div>
+        <div class="hp-list-item">
+            <label>地址</label>
+        </div>
+        <div class="hp-list-item">
+            <label>出租模式</label>
+        </div>
+        <div class="hp-list-item">
+            <label>房型</label>
+        </div>
+        <div class="hp-list-item">
+            <label>租金</label>
+        </div>
+        <div class="hp-list-item">
+            <label>签约起始时间</label>
+        </div>
+        <div class="hp-list-item">
+            <label>签约结束时间</label>
+        </div>
+        <div class="hp-list-item">
+            <label>签约状态</label>
+        </div>
+    </div>
+    <div class="hp-list" th:each="record : ${page1.list}">
+        <div class="hp-list-item">
+            <img th:src="${record.imgs.split(',')[0]}">
+        </div>
+        <div class="hp-list-item">
+            <label th:text="${record.title}"></label>
+        </div>
+        <div class="hp-list-item">
+            <label th:text="${record.city}"></label>
+        </div>
+        <div class="hp-list-item">
+            <label th:text="${record.hireModeStr}"></label>
+        </div>
+        <div class="hp-list-item">
+            <label th:text="${record.homeTypeStr}"></label>
+        </div>
+        <div class="hp-list-item">
+            <label th:text="${record.money}"></label>
+        </div>
+        <div class="hp-list-item">
+            <label th:text="${record.startTime}"></label>
+        </div>
+        <div class="hp-list-item">
+            <label th:text="${record.endTime}"></label>
+        </div>
+        <div class="hp-list-item">
+            <label th:text="${record.signContractStatus}"></label>
+        </div>
+    </div>
+    <div>
+        <ul class="am-pagination">
+        </ul>
+    </div>
+</div>
+<script>
+    var pagination = new Pagination({
+        wrap: $('.am-pagination'), // 存放分页内容的容器
+        count: [[${page1.pageSize}]], // 总页数
+        current: [[${page1.page}]], // 当前的页数（默认为1）
+        prevText: '上一页', // prev 按钮的文本内容
+        nextText: '下一页', // next 按钮的文本内容
+        callback: function (pageNum) { // 每一个页数按钮的回调事件
+            //重新加载列表
+            $('.card-right').load('/yunhome/tenant/signingRecord?page='+pageNum);
+        }
+    });
+</script>
+</body>
+</html>

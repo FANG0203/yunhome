@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrfang.yunhome.mapper.HomeMapper">
+    <resultMap type="Home" id="HomeResult">
+        <result property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="city" column="city"/>
+        <result property="zone" column="zone"/>
+        <result property="address" column="address"/>
+        <result property="money" column="money"/>
+        <result property="area" column="area"/>
+        <result property="homeType" column="home_type"/>
+        <result property="hireMode" column="hire_mode"/>
+        <result property="imgs" column="imgs"/>
+        <result property="homeExplain" column="home_explain"/>
+        <result property="facilities" column="facilities"/>
+        <result property="trafficConditions" column="traffic_conditions"/>
+        <result property="pointer" column="pointer"/>
+        <result property="homeStatus" column="home_status"/>
+        <result property="onlineStatus" column="online_status"/>
+        <result property="payMode" column="pay_mode"/>
+        <result property="userId" column="user_id"/>
+        <result property="homeTypeName" column="homeType"/>
+        <result property="hireModeName" column="hireMode"/>
+        <result property="avatar" column="avatar"/>
+    </resultMap>
+
+    <sql id="selectHomeVo">
+        select id,
+               title,
+               city, zone, address, money, area, home_type, hire_mode, imgs, home_explain, facilities, traffic_conditions, pointer, home_status, online_status, pay_mode, user_id
+        from t_home
+    </sql>
+
+    <select id="list" parameterType="Home" resultMap="HomeResult">
+        select su.avatar, dd.dict_label homeType, sdd.dict_label hireMode, h.* ,sc.status signContractStatus from t_home h
+        left join sys_user su on su.user_id = h.user_id
+        left join sys_dict_data dd on h.home_type = dd.dict_value and dd.dict_type = 't_home_home_type'
+        left join sys_dict_data sdd on h.hire_mode = sdd.dict_value and sdd.dict_type = 't_home_hire_mode'
+        left join t_sign_contract sc on h.id=sc.home_id
+        <where>
+
+            <if test="home.city != null  and home.city != ''"> and city = #{home.city}</if>
+            <if test="home.minMoney != null "> and money >= #{home.minMoney}</if>
+            <if test="home.maxMoney != null "> and money &lt;= #{home.maxMoney}</if>
+            <if test="home.homeType != null "> and home_type = #{home.homeType}</if>
+            <if test="home.hireMode != null "> and hire_mode = #{home.hireMode}</if>
+            <if test="home.minArea != null "> and area >= #{home.minArea}</if>
+            <if test="home.maxArea != null "> and area &lt;= #{home.maxArea}</if>
+            and home_status = '1'
+            and online_status = '2'
+        </where>
+        limit #{page}, #{size}
+    </select>
+
+    <select id="count" resultType="long">
+        select count(id) from t_home
+        <where>
+            <if test="home.city != null  and home.city != ''"> and city = #{home.city}</if>
+            <if test="home.minMoney != null "> and money >= #{home.minMoney}</if>
+            <if test="home.maxMoney != null "> and money &lt;= #{home.maxMoney}</if>
+            <if test="home.homeType != null "> and home_type = #{home.homeType}</if>
+            <if test="home.hireMode != null "> and hire_mode = #{home.hireMode}</if>
+            <if test="home.minArea != null "> and area >= #{home.minArea}</if>
+            <if test="home.maxArea != null "> and area &lt;= #{home.maxArea}</if>
+            and home_status = '1'
+            and online_status = '2'
+        </where>
+    </select>
+
+    <select id="getById" resultType="home">
+        select h.*, su.avatar, su.user_name from t_home h
+        left join sys_user su on su.user_id = h.user_id
+        where h.id = #{id}
+    </select>
+
+</mapper>

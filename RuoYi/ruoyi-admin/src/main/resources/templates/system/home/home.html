@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('房源管理列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>id：</label>
+                                <input type="text" name="id"/>
+                            </li>
+                            <li>
+                                <label>房源标题：</label>
+                                <input type="text" name="title"/>
+                            </li>
+                            <li>
+                                <label>城市：</label>
+                                <input type="text" name="city"/>
+                            </li>
+                            <li>
+                                <label>区：</label>
+                                <input type="text" name="zone"/>
+                            </li>
+                            <li>
+                                <label>详情地址：</label>
+                                <input type="text" name="address"/>
+                            </li>
+                            <li>
+                                <label>租金：</label>
+                                <input type="text" name="money"/>
+                            </li>
+                            <li>
+                                <label>面积：</label>
+                                <input type="text" name="area"/>
+                            </li>
+                            <li>
+                                <label>房型：</label>
+                                <select name="homeType" th:with="type=${@dict.getType('t_home_home_type')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>出租模式：</label>
+                                <select name="hireMode" th:with="type=${@dict.getType('t_home_hire_mode')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>房屋说明：</label>
+                                <input type="text" name="homeExplain"/>
+                            </li>
+                            <li>
+                                <label>配套设施：</label>
+                                <input type="text" name="facilities"/>
+                            </li>
+                            <li>
+                                <label>交通情况：</label>
+                                <input type="text" name="trafficConditions"/>
+                            </li>
+                            <li>
+                                <label>地图坐标：</label>
+                                <input type="text" name="pointer"/>
+                            </li>
+                            <li>
+                                <label>房源状态：</label>
+                                <select name="homeStatus" th:with="type=${@dict.getType('t_home_home_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>上线状态：</label>
+                                <select name="onlineStatus" th:with="type=${@dict.getType('t_home_online_status')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>支付方式：</label>
+                                <select name="payMode" th:with="type=${@dict.getType('t_home_pay_mode')}">
+                                    <option value="">所有</option>
+                                    <option th:each="dict : ${type}" th:text="${dict.dictLabel}" th:value="${dict.dictValue}"></option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>房屋所有者id：</label>
+                                <input type="text" name="userId"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:home:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:home:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:home:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:home:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:home:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:home:remove')}]];
+        var upFlag = [[${@permission.hasPermi('system:home:up')}]];
+        var downFlag = [[${@permission.hasPermi('system:home:down')}]];
+        var homeTypeDatas = [[${@dict.getType('t_home_home_type')}]];
+        var hireModeDatas = [[${@dict.getType('t_home_hire_mode')}]];
+        var homeStatusDatas = [[${@dict.getType('t_home_home_status')}]];
+        var onlineStatusDatas = [[${@dict.getType('t_home_online_status')}]];
+        var payModeDatas = [[${@dict.getType('t_home_pay_mode')}]];
+        var prefix = ctx + "system/home";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "房源管理",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'id',
+                    title: 'id',
+                    visible: false
+                },
+                {
+                    field: 'title',
+                    title: '房源标题'
+                },
+                {
+                    field: 'city',
+                    title: '城市'
+                },
+                {
+                    field: 'zone',
+                    title: '区'
+                },
+                {
+                    field: 'address',
+                    title: '详情地址'
+                },
+                {
+                    field: 'money',
+                    title: '租金'
+                },
+                {
+                    field: 'area',
+                    title: '面积'
+                },
+                {
+                    field: 'homeType',
+                    title: '房型',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(homeTypeDatas, value);
+                    }
+                },
+                {
+                    field: 'hireMode',
+                    title: '出租模式',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(hireModeDatas, value);
+                    }
+                },
+                {
+                    field: 'imgs',
+                    title: '房源图片',
+                    formatter: function(value, row, index) {
+                        // return "<img height='50px' src=' "+value+ " '>";
+                        var arr = value.split(",");
+                        var  str = "";
+                        for (var i in arr){
+                            str += $.table.imageView(arr[i]);
+                        }
+                        return str;
+                    }
+                },
+                {
+                    field: 'homeExplain',
+                    title: '房屋说明'
+                },
+                {
+                    field: 'facilities',
+                    title: '配套设施'
+                },
+                {
+                    field: 'trafficConditions',
+                    title: '交通情况'
+                },
+                {
+                    field: 'pointer',
+                    title: '地图坐标'
+                },
+                {
+                    field: 'homeStatus',
+                    title: '房源状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(homeStatusDatas, value);
+                    }
+                },
+                {
+                    field: 'onlineStatus',
+                    title: '上线状态',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(onlineStatusDatas, value);
+                    }
+                },
+                {
+                    field: 'payMode',
+                    title: '支付方式',
+                    formatter: function(value, row, index) {
+                       return $.table.selectDictLabel(payModeDatas, value);
+                    }
+                },
+                {
+                    field: 'userId',
+                    title: '房屋所有者id'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.id + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.id + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        actions.push(' <a class="btn btn-primary btn-xs ' + upFlag + '" href="javascript:void(0)" onclick="up(\'' + row.id + '\')"><i class="fa fa-remove"></i>上线</a>');
+                        actions.push(' <a class="btn btn-warning btn-xs ' + upFlag + '" href="javascript:void(0)" onclick="down(\'' + row.id + '\')"><i class="fa fa-remove"></i>下线</a>');
+                        actions.push(' <a class="btn btn-info btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="showComments(\'' + row.id + '\')"><i class="fa fa-comments-o"></i>查看评论</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+
+
+
+        //上线
+        function up(id) {
+                $.operate.post("/system/home/up",{id:id});
+        }
+        //下线
+        function down(id) {
+            $.operate.post("/system/home/down",{id:id});
+        }
+        //查看评论
+        function showComments(id) {
+            $.modal.open("查看评论" , "/system/home/showComment?id="+id);
+
+        }
+
+    </script>
+</body>
+</html>

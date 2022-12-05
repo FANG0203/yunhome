@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.HomeMapper">
+    
+    <resultMap type="com.ruoyi.system.domain.Home" id="HomeResult">
+        <result property="id"    column="id"    />
+        <result property="title"    column="title"    />
+        <result property="city"    column="city"    />
+        <result property="zone"    column="zone"    />
+        <result property="address"    column="address"    />
+        <result property="money"    column="money"    />
+        <result property="area"    column="area"    />
+        <result property="homeType"    column="home_type"    />
+        <result property="hireMode"    column="hire_mode"    />
+        <result property="imgs"    column="imgs"    />
+        <result property="homeExplain"    column="home_explain"    />
+        <result property="facilities"    column="facilities"    />
+        <result property="trafficConditions"    column="traffic_conditions"    />
+        <result property="pointer"    column="pointer"    />
+        <result property="homeStatus"    column="home_status"    />
+        <result property="onlineStatus"    column="online_status"    />
+        <result property="payMode"    column="pay_mode"    />
+        <result property="userId"    column="user_id"    />
+        <result property="contractId"    column="contract_id"    />
+    </resultMap>
+
+    <sql id="selectHomeVo">
+        select id, title, city, zone, address, money, area, home_type, hire_mode, imgs, home_explain, facilities, traffic_conditions, pointer, home_status, online_status, pay_mode, user_id , contract_id from t_home
+    </sql>
+
+    <select id="selectHomeList" parameterType="com.ruoyi.system.domain.Home" resultMap="HomeResult">
+        <include refid="selectHomeVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="title != null  and title != ''"> and title like concat('%', #{title}, '%')</if>
+            <if test="city != null  and city != ''"> and city like concat('%', #{city}, '%')</if>
+            <if test="zone != null  and zone != ''"> and zone like concat('%', #{zone}, '%')</if>
+            <if test="address != null  and address != ''"> and address like concat('%', #{address}, '%')</if>
+            <if test="money != null "> and money like concat('%', #{money}, '%')</if>
+            <if test="area != null  and area != ''"> and area like concat('%', #{area}, '%')</if>
+            <if test="homeType != null "> and home_type like concat('%', #{homeType}, '%')</if>
+            <if test="hireMode != null "> and hire_mode like concat('%', #{hireMode}, '%')</if>
+            <if test="imgs != null  and imgs != ''"> and imgs like concat('%', #{imgs}, '%')</if>
+            <if test="homeExplain != null  and homeExplain != ''"> and home_explain like concat('%', #{homeExplain}, '%')</if>
+            <if test="facilities != null  and facilities != ''"> and facilities like concat('%', #{facilities}, '%')</if>
+            <if test="trafficConditions != null  and trafficConditions != ''"> and traffic_conditions like concat('%', #{trafficConditions}, '%')</if>
+            <if test="pointer != null  and pointer != ''"> and pointer like concat('%', #{pointer}, '%')</if>
+            <if test="homeStatus != null "> and home_status like concat('%', #{homeStatus}, '%')</if>
+            <if test="onlineStatus != null "> and online_status like concat('%', #{onlineStatus}, '%')</if>
+            <if test="payMode != null "> and pay_mode like concat('%', #{payMode}, '%')</if>
+            <if test="userId != null "> and user_id like concat('%', #{userId}, '%')</if>
+            <if test="contractId != null "> and user_id like concat('%', #{contractId}, '%')</if>
+        </where>
+    </select>
+    
+    <select id="selectHomeById" parameterType="Long" resultMap="HomeResult">
+        <include refid="selectHomeVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHome" parameterType="com.ruoyi.system.domain.Home" useGeneratedKeys="true" keyProperty="id">
+        insert into t_home
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">title,</if>
+            <if test="city != null and city != ''">city,</if>
+            <if test="zone != null and zone != ''">zone,</if>
+            <if test="address != null and address != ''">address,</if>
+            <if test="money != null">money,</if>
+            <if test="area != null and area != ''">area,</if>
+            <if test="homeType != null">home_type,</if>
+            <if test="hireMode != null">hire_mode,</if>
+            <if test="imgs != null">imgs,</if>
+            <if test="homeExplain != null and homeExplain != ''">home_explain,</if>
+            <if test="facilities != null and facilities != ''">facilities,</if>
+            <if test="trafficConditions != null and trafficConditions != ''">traffic_conditions,</if>
+            <if test="pointer != null and pointer != ''">pointer,</if>
+            <if test="homeStatus != null">home_status,</if>
+            <if test="onlineStatus != null">online_status,</if>
+            <if test="payMode != null">pay_mode,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="contractId != null">contract_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="title != null and title != ''">#{title},</if>
+            <if test="city != null and city != ''">#{city},</if>
+            <if test="zone != null and zone != ''">#{zone},</if>
+            <if test="address != null and address != ''">#{address},</if>
+            <if test="money != null">#{money},</if>
+            <if test="area != null and area != ''">#{area},</if>
+            <if test="homeType != null">#{homeType},</if>
+            <if test="hireMode != null">#{hireMode},</if>
+            <if test="imgs != null">#{imgs},</if>
+            <if test="homeExplain != null and homeExplain != ''">#{homeExplain},</if>
+            <if test="facilities != null and facilities != ''">#{facilities},</if>
+            <if test="trafficConditions != null and trafficConditions != ''">#{trafficConditions},</if>
+            <if test="pointer != null and pointer != ''">#{pointer},</if>
+            <if test="homeStatus != null">#{homeStatus},</if>
+            <if test="onlineStatus != null">#{onlineStatus},</if>
+            <if test="payMode != null">#{payMode},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="contractId != null">#{contractId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHome" parameterType="com.ruoyi.system.domain.Home">
+        update t_home
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="title != null and title != ''">title = #{title},</if>
+            <if test="city != null and city != ''">city = #{city},</if>
+            <if test="zone != null and zone != ''">zone = #{zone},</if>
+            <if test="address != null and address != ''">address = #{address},</if>
+            <if test="money != null">money = #{money},</if>
+            <if test="area != null and area != ''">area = #{area},</if>
+            <if test="homeType != null">home_type = #{homeType},</if>
+            <if test="hireMode != null">hire_mode = #{hireMode},</if>
+            <if test="imgs != null">imgs = #{imgs},</if>
+            <if test="homeExplain != null and homeExplain != ''">home_explain = #{homeExplain},</if>
+            <if test="facilities != null and facilities != ''">facilities = #{facilities},</if>
+            <if test="trafficConditions != null and trafficConditions != ''">traffic_conditions = #{trafficConditions},</if>
+            <if test="pointer != null and pointer != ''">pointer = #{pointer},</if>
+            <if test="homeStatus != null">home_status = #{homeStatus},</if>
+            <if test="onlineStatus != null">online_status = #{onlineStatus},</if>
+            <if test="payMode != null">pay_mode = #{payMode},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="contractId != null">contract_id = #{contractId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHomeById" parameterType="Long">
+        delete from t_home where id = #{id}
+    </delete>
+
+    <delete id="deleteHomeByIds" parameterType="String">
+        delete from t_home where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

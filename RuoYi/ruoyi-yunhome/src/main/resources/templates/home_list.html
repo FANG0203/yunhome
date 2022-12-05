@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <title>云+-首页</title>
+
+    <script src="lib/amazeui/pagination/amazeui-pagination.js"></script>
+
+</head>
+<body>
+<div class="hp-container">
+    <div class="hp-query-area">
+        <div class="am-g">
+            <div class="hp-query-item">
+                <ul class="hp-ul-list province">
+                    <li class="li-mark">省:</li>
+                </ul>
+            </div>
+        </div>
+        <div class="am-g">
+            <div class="hp-query-item">
+                <ul class="hp-ul-list city" id="city">
+                    <li class="li-mark">城市:</li>
+                    <li class="li-select">不限</li>
+                </ul>
+            </div>
+        </div>
+        <div class="am-g">
+            <div class="hp-query-item">
+                <ul class="hp-ul-list" id="money">
+                    <li class="li-mark">租金:</li>
+                    <li class="li-select">不限</li>
+                    <li class="li-item"><a href="#"data="500-">500以下</a></li>
+                    <li class="li-item"><a href="#"data="500-1000">500-1000</a></li>
+                    <li class="li-item"><a href="#"data="1000-1500">1000-1500</a></li>
+                    <li class="li-item"><a href="#"data="1500-2000">1500-2000</a></li>
+                    <li class="li-item"><a href="#"data="2000-2500">2000-2500</a></li>
+                    <li class="li-item"><a href="#"data="3000-3500">3000-3500</a></li>
+                    <li class="li-item"><a href="#"data="3500-4000">3500-4000</a></li>
+                    <li class="li-item"><a href="#"data="4000-5000">4000-5000</a></li>
+                    <li class="li-item"><a href="#"data="5000+">5000以上</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="am-g">
+            <div class="hp-query-item">
+                <ul class="hp-ul-list" id="area">
+                    <li class="li-mark">面积:</li>
+                    <li class="li-select">不限</li>
+                    <li class="li-item"><a href="#"data="60-">60平米以下</a></li>
+                    <li class="li-item"><a href="#"data="60-90">60-90平</a></li>
+                    <li class="li-item"><a href="#"data="90-120">90-120平</a></li>
+                    <li class="li-item"><a href="#"data="120-140">120-140平</a></li>
+                    <li class="li-item"><a href="#"data="140-200">140-200平</a></li>
+                    <li class="li-item"><a href="#"data="200-300">200-300平</a></li>
+                    <li class="li-item"><a href="#"data="300+">300平以上</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="am-g">
+            <div class="hp-query-item">
+                <ul class="hp-ul-list" id="homeType">
+                    <li class="li-mark">房型:</li>
+                    <li class="li-select">不限</li>
+                    <li class="li-item"><a href="#" data="1">一室</a></li>
+                    <li class="li-item"><a href="#" data="2">两室</a></li>
+                    <li class="li-item"><a href="#" data="3">三室</a></li>
+                    <li class="li-item"><a href="#" data="4">四室</a></li>
+                    <li class="li-item"><a href="#" data="5">五室</a></li>
+                    <li class="li-item"><a href="#" data="6">五室以上</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="am-g">
+            <div class="hp-query-item">
+                <ul class="hp-ul-list" id="hireMode">
+                    <li class="li-mark">方式:</li>
+                    <li class="li-select">不限</a></li>
+                    <li class="li-item"><a href="#" data="1">整租</a></li>
+                    <li class="li-item"><a href="#" data="2">合租</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="am-g">
+            <div class="hp-query-item">
+                <ul class="hp-ul-list">
+                    <li class="li-mark" style="margin-top: 5px;">筛选条件:</li>
+                    <li>
+                        <div class="search-list">
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="hp-body-area">
+        <div class="am-g">
+            <ul class="am-avg-lg-4 am-thumbnails">
+
+                <li class="hp-home-img-item" th:each="home : ${page1.list}">
+                    <div class="hp-img">
+                        <a href="#" th:data="'/yunhome/home/detailsPage?id='+ ${home.id}">
+                            <img class="am-thumbnail" th:src="${home.imgs.split(',')[0]}"/>
+                        </a>
+                        <div>
+                            <div class="hp-fl">
+                                <div>
+                                    <span class="hp-home-title" th:text="${home.title}"></span>
+                                </div>
+                                <div>
+                                    <span class="hp-home-type-mark" th:text="${home.hireModeName} + '/' + ${home.homeTypeName}"></span>
+                                    <span class="hp-home-price" th:text="${home.money} + '/月'"></span>
+                                </div>
+                            </div>
+                            <div class="hp-fr hp-am-circle-img">
+                                <img th:src="'http://localhost:8080'+${home.avatar}" class="am-circle hp-am-circle"/>
+                            </div>
+                        </div>
+
+                    </div>
+                </li>
+
+
+
+
+            </ul>
+        </div>
+
+        <!-- 分页位标  区域  -->
+        <div class="am-g am-cf">
+            <div class="am-container">
+                <ul class="am-pagination ">
+                </ul>
+            </div>
+        </div>
+        <!-- 分页位标  区域   end-->
+    </div>
+
+</div>
+
+<script>
+    //定义存储筛选条件容器
+    var search = {};
+    search.city = '[[${homeExt.city}]]';
+    search.minMoney = '[[${homeExt.minMoney}]]';
+    search.maxMoney = '[[${homeExt.maxMoney}]]';
+    search.minArea = '[[${homeExt.minArea}]]';
+    search.maxArea = '[[${homeExt.maxArea}]]';
+    search.homeType = '[[${homeExt.homeType}]]';
+    search.hireMode = '[[${homeExt.hireMode}]]';
+
+    var pagination = new Pagination({
+        wrap: $('.am-pagination'), // 存放分页内容的容器
+        count: [[${page1.pageSize}]], // 总页数
+        current: [[${page1.page}]], // 当前的页数（默认为1）
+        prevText: '上一页', // prev 按钮的文本内容
+        nextText: '下一页', // next 按钮的文本内容
+        callback: function (pageNum) { // 每一个页数按钮的回调事件
+            //重新加载列表
+            $(".home-container").load("/yunhome/home/list?page="+pageNum+"&" + $.param(search));
+        }
+    });
+
+    $(function () {
+        $.getJSON('/city.json', function (data) {
+            //所有的省数组
+            var provinces = data.provinces;
+
+            //将数组中的键值遍历赋值
+            for (var i = 0; i < provinces.length; i++) {
+                //省的名称
+                var provinceName = provinces[i].provinceName;
+
+                var a = $('<a href="#">').text(provinceName);
+                var li = $('<li class="li-item">').append(a);
+
+                //添加li标签
+                $('.province').append(li);
+            }
+
+            //给省标签添加点击事件
+            $('.province li:not(:first)').click(function () {
+                //清空
+                $('.city').empty();
+
+                for (var i = 0; i < provinces.length; i++) {
+                    //每个省数据
+                    var province = provinces[i];
+                    if (province.provinceName == $(this).text()) {
+
+                        $('.city').append('<li class="li-mark">城市:</li><li class="li-select">不限</li>');
+
+                        //城市集合
+                        var citys = province.citys;
+                        for (var j = 0; j < citys.length; j++) {
+
+                            var a = $('<a href="#">').text(citys[j].cityName);
+                            a.attr("data", citys[j].cityName);
+                            var li = $('<li class="li-item">').append(a);
+
+                            $('.city').append(li);
+                        }
+                    }
+                }
+            })
+
+        })
+
+        //筛选条件添加点击事件
+        $('.hp-query-area .am-g:not(:first)').on('click', '.li-item', function () {
+            $('.search-list').empty();
+
+            //获取条件内容
+            let text = $(this).children().text();
+            let data = $(this).children().attr("data");
+
+            //属性值
+            let id = $(this).parent().attr("id");
+
+            if(id=="money"){
+                if(data.endsWith("-")){
+                    search.maxMoney = data.replace("-", "");
+                }else if(data.endsWith("+")){
+                    search.minMoney = data.replace("+", "");
+                }else{
+                    let arr = data.split("-");
+                    search.minMoney = arr[0];
+                    search.maxMoney = arr[1];
+                }
+            }else if(id=="area"){
+                if(data.endsWith("-")){
+                    search.maxArea = data.replace("-", "");
+                }else if(data.endsWith("+")){
+                    search.minArea = data.replace("+", "");
+                }else{
+                    let arr = data.split("-");
+                    search.minArea = arr[0];
+                    search.maxArea = arr[1];
+                }
+            }else{
+                eval('search.'+ id + '="' + data + '"');
+            }
+
+            //将筛选条件添加到页面
+            /*<a href="#" class="am-btn am-btn-default">武汉 X</a>*/
+            showSearch();
+
+
+            //重新加载列表
+            $(".home-container").load("/yunhome/home/list?" + $.param(search));
+        })
+
+
+
+        //给筛选条件添加点击事件
+        $(".search-list").on('click', 'a', function () {
+            let key = $(this).attr("data");
+            //删除search对象的属性
+            eval('delete search.' + key);
+            //从页面中删除自身
+            $(this).remove();
+            //重新加载列表
+            $(".home-container").load("/yunhome/home/list?" + $.param(search));
+        })
+
+        //删除掉空属性
+        for (let key in search){
+            if(search[key]==''){
+                eval('delete search.'+key);
+            }
+        }
+        showSearch();
+        //详情页点击事件
+        $('.hp-img>a').click(function () {
+            let url = $(this).attr("data");
+            $(".home-container").load(url);
+        })
+    })
+
+
+    function showSearch() {
+        for (let key in search){
+            let a;
+            if(key=="hireMode"){
+                if(search[key]==1){
+                    a = $('<a href="#" class="am-btn am-btn-default">').text('整租');
+                }else{
+                    a = $('<a href="#" class="am-btn am-btn-default">').text('合租');
+                }
+            }else if(key=="homeType"){
+                if(search[key]==1){
+                    a = $('<a href="#" class="am-btn am-btn-default">').text('一室');
+                }else if(search[key]==2){
+                    a = $('<a href="#" class="am-btn am-btn-default">').text('二室');
+                }else if(search[key]==3){
+                    a = $('<a href="#" class="am-btn am-btn-default">').text('三室');
+                }else if(search[key]==4){
+                    a = $('<a href="#" class="am-btn am-btn-default">').text('四室');
+                }else if(search[key]==5){
+                    a = $('<a href="#" class="am-btn am-btn-default">').text('五室');
+                }else if(search[key]==6){
+                    a = $('<a href="#" class="am-btn am-btn-default">').text('五室以上');
+                }
+            }else{
+                a = $('<a href="#" class="am-btn am-btn-default">').text(search[key]);
+            }
+
+            a.attr("data", key);
+            $(".search-list").append(a);
+            $(".search-list").append("\r\n");
+        }
+    }
+
+
+
+
+
+</script>
+
+</body>
+
+</html>

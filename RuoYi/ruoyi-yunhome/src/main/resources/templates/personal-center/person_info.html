@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人信息</title>
+    <style>
+        form{
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            margin: 20px;
+        }
+        .form-div {
+            margin-bottom: 20px;
+        }
+        .form-div>img{
+            height: 100px;
+            width: 100px;
+            border-radius: 100px;
+            cursor: pointer;
+        }
+        .hp-input{
+            height: 50px;
+            min-width: 400px;
+            border-radius: 5px;
+            outline: none;
+            border: 1px solid #a6a6a6;
+            letter-spacing: 1px;
+            padding-left: 12px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .form-div>label {
+            width: 100px;
+            text-align: right;
+        }
+        .form-div>input[type="submit"] {
+            padding: 15px 35px;
+            border: navajowhite;
+            background-color: #2196f3;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <form>
+        <div class="form-div">
+            <img class="person-img" th:src="'/yunhome/file/showImage?fileName=' + ${session.tenant.img}">
+            <input type="file" name="file" style="display: none" id="file">
+            <input type="hidden" name="img" id="img" th:value="${session.tenant.img}">
+            <input type="hidden" name="id" th:value="${session.tenant.id}">
+        </div>
+        <div class="form-div">
+            <label>昵称：</label>
+            <input class="hp-input" name="nickname" th:value="${session.tenant.nickname}">
+        </div>
+        <div class="form-div">
+            <label>用户名：</label>
+            <input class="hp-input" name="username" th:value="${session.tenant.username}">
+        </div>
+        <div class="form-div">
+            <label>手机号：</label>
+            <input class="hp-input" name="tel" th:value="${session.tenant.tel}" >
+        </div>
+        <div class="form-div">
+            <label>个人说明：</label>
+            <textarea class="hp-input" name="tenantExplain" th:text="${session.tenant.tenantExplain}"></textarea>
+        </div>
+        <div class="form-div">
+            <input type="button" value="修改" id="update">
+        </div>
+    </form>
+    <script>
+        $(function () {
+            //头像点击事件
+            $('.person-img').click(function () {
+                $('#file').click();
+            })
+
+            //文件选择框添加change事件
+            $('#file').change(function () {
+                //使用Ajax进行文件上传
+                $.ajax({
+                    url: '/yunhome/file/upload',
+                    type: 'post',
+                    processData: false,
+                    contentType: false,
+                    data: new FormData($('form')[0]),
+                    success: function (e) {
+                        $('#img').val(e);
+                    }
+                })
+
+                $('#file').val("");
+            })
+
+            //修改按钮点击事件
+            $('#update').click(function () {
+                let data = $('form').serialize();
+                $('.card-right').load('/yunhome/tenant/update?'+data);
+                layer.msg("修改成功",{icon: 1});
+            })
+        })
+    </script>
+</body>
+</html>

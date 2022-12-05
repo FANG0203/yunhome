@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('房源管理列表')" />
+</head>
+<body class="gray-bg">
+    <div class="col-sm-12 select-table table-striped">
+        <table id="bootstrap-table"></table>
+        <!--接收controller层的值，并传输给后台-->
+        <input type="hidden" th:value="${homeId}" id="homeId">
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/home";
+
+        $(function() {
+            var options = {
+                url: prefix + "/commentList?homeId="+$("#homeId").val(),
+                exportUrl: prefix + "/export",
+                modalName: "评论",
+                columns: [{
+                    checkbox: true
+                },
+                    {
+                        field: 'id',
+                        title: 'id',
+                        visible: false
+                    },
+                    {
+                        field: 'tenantId',
+                        title: '评论人'
+                    },
+                    {
+                        field: 'comment',
+                        title: '评论内容'
+                    },
+                    {
+                        field: 'commentTime',
+                        title: '评论时间'
+                    }
+                   ]
+            };
+            $.table.init(options);
+        });
+    </script>
+    <script>
+
+        var  prefix = ctx + "system/home"
+
+    </script>
+</body>
+</html>

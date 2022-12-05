@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+
+	<head>
+		<meta charset="UTF-8">
+		<title>云+-首页</title>
+		<link rel="stylesheet" href="lib/amazeui/assets/css/amazeui.css" />
+		<link rel="stylesheet" href="lib/swiper/css/swiper.min.css" />
+		<link rel="stylesheet" href="css/hp.css" />
+
+		<script src="lib/amazeui/assets/js/jquery.min.js"></script>
+		<script src="lib/amazeui/assets/js/amazeui.js"></script>
+		<script src="lib/swiper/js/swiper.jquery.min.js"></script>
+		<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=AyI4O6S4sfPiP2gGaoGBAQq6Uy25Xt8Y"></script>
+		<script src="lib/layer/layer.js"></script>
+
+		<style>
+			html,
+			body {
+				position: relative;
+				height: 100%;
+			}
+			
+			body {
+				background: #eee;
+				font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+				font-size: 14px;
+				color: #000;
+				margin: 0;
+				padding: 0;
+			}
+			
+			.swiper-container {
+				width: 100%;
+				height: 100%;
+				margin-left: auto;
+				margin-right: auto;
+			}
+			
+			.swiper-slide {
+				text-align: center;
+				font-size: 18px;
+				background: #fff;
+				/* Center slide text vertically */
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-box-pack: center; 
+				-ms-flex-pack: center;
+				-webkit-justify-content: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				-webkit-align-items: center;
+				align-items: center;
+			}
+			.home-container{
+				height: 100%;
+				width: 100%;
+			}
+			.topbar-right{
+				margin: 0;
+				list-style: none;
+				float: right;
+			}
+			.topbar-right-item{
+				display: block;
+				float: left;
+				line-height: 50px;
+				padding: 0px 10px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="hp-top-area">
+			<header class="am-topbar am-topbar-inverse hp-top-header">
+				<h1 class="am-topbar-brand hp-topbar-brand">
+						<a  href="#" data="home_"> 云  +</a>
+					</h1>
+				<div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse-3">
+					<ul class="am-nav am-nav-pills am-topbar-nav">
+						<li class="am-active url">
+							<a href="#" data="/home_">首页</a>
+						</li>
+						<li class="url">
+							<a href="#" data="/yunhome/home/list">租房</a>
+						</li>
+
+						<li class="am-dropdown" data-am-dropdown="">
+							<a class="am-dropdown-toggle" data-am-dropdown-toggle="" href="javascript:;">关于我们 <span class="am-icon-caret-down"></span></a>
+							<ul class="am-dropdown-content">
+								<li class="hp-about-item">
+									<a href="http://www.myhopu.com/" target="_blank">厚溥</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<ul class="topbar-right" th:if="${session.tenant==null}">
+						<li class="topbar-right-item">
+							<a href="register_">注册</a>
+						</li>
+						<li class="topbar-right-item">
+							<a href="login_">登录</a>
+						</li>
+					</ul>
+					<ul class="topbar-right" th:if="${session.tenant!=null}">
+						<li class="topbar-right-item">
+							<a href="#" th:text="${session.tenant.nickname}"></a>
+						</li>
+						<li class="topbar-right-item url">
+							<a href="#" data="/personal_center_">个人中心</a>
+						</li>
+						<li class="topbar-right-item">
+							<a href="/logout">退出</a>
+						</li>
+					</ul>
+				</div>
+			</header>
+		</div>
+		<div class="home-container"></div>
+
+		<script>
+			<!--默认加载页面-->
+			$(".home-container").load("/home_");
+
+			//给菜单添加点击事件
+			$('.url').click(function () {
+				//移除所有的li的选中样式
+				$('.url').removeClass("am-active");
+				//添加选中样式
+				$(this).addClass("am-active");
+				//获取li标签下的a标签下的data属性值
+				var url = $($(this).find("a")).attr("data");
+				//加载
+				$(".home-container").load(url);
+			})
+
+		</script>
+
+	</body>
+
+</html>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>个人中心</title>
+    <style>
+        .hp-container{
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #eeeeee;
+        }
+        .hp-card {
+            display: flex;
+            width: 80%;
+            height: 90%;
+            border-radius: 5px;
+        }
+        .card-left {
+            width: 250px;
+            height: 100%;
+            border-radius: 5px;
+            margin-right: 20px;
+            background-color: white;
+        }
+        .card-right {
+            width: 100%;
+            height: 100%;
+            background-color: white;
+        }
+        .card-left ul {
+            list-style: none;
+            text-align: center;
+            padding-left: 0px;
+            padding-top: 20px;
+            font-size: 16px;
+            line-height: 40px;
+            letter-spacing: 5px;
+        }
+        .card-left li:hover {
+            cursor: pointer;
+        }
+        .card-left li {
+            color: #8d8d8d;
+        }
+        li.active {
+            color: #ff9800;
+        }
+    </style>
+</head>
+<body>
+    <div class="hp-container">
+        <div class="hp-card">
+            <div class="card-left">
+                <ul>
+                    <li class="active" data="/personal-center/person_info_">个人信息</li>
+                    <li data="/personal-center/update_password_">修改密码</li>
+                    <li data="/personal-center/authentication_">实名认证</li>
+                    <li data="/yunhome/tenant/signingRecord">签约记录</li>
+                    <li data="/yunhome/tenant/myComment">我的评价</li>
+                </ul>
+            </div>
+            <div class="card-right"></div>
+        </div>
+    </div>
+    <script>
+        $(function () {
+            //点击事件
+            $('.card-left li').click(function () {
+                $('.card-left li').removeClass("active");
+                $(this).addClass("active");
+                $('.card-right').load($(this).attr("data"));
+            })
+
+            //进来就选中第1个
+            $('.card-left li:eq(0)').click();
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrfang.yunhome.mapper.CommentMapper">
+    
+    <resultMap type="Comment" id="CommentResult">
+        <result property="id"    column="id"    />
+        <result property="homeId"    column="home_id"    />
+        <result property="tenantId"    column="tenant_id"    />
+        <result property="comment"    column="comment"    />
+        <result property="commentTime"    column="comment_time"    />
+    </resultMap>
+
+    <sql id="selectCommentVo">
+        select id, home_id, tenant_id, comment, comment_time from t_comment
+    </sql>
+
+    <select id="selectCommentList" parameterType="Comment" resultMap="CommentResult">
+        select tc.*,tt.nickname,tt.username,tt.img from t_comment tc
+        left join t_tenant tt on tc.tenant_id = tt.id
+        <where>  
+            <if test="homeId != null "> and home_id = #{homeId}</if>
+            <if test="tenantId != null "> and tenant_id = #{tenantId}</if>
+            <if test="comment != null  and comment != ''"> and comment = #{comment}</if>
+            <if test="commentTime != null "> and comment_time = #{commentTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectCommentById" parameterType="Long" resultMap="CommentResult">
+        <include refid="selectCommentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertComment" parameterType="Comment" useGeneratedKeys="true" keyProperty="id">
+        insert into t_comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="homeId != null">home_id,</if>
+            <if test="tenantId != null">tenant_id,</if>
+            <if test="comment != null and comment != ''">comment,</if>
+            <if test="commentTime != null">comment_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="homeId != null">#{homeId},</if>
+            <if test="tenantId != null">#{tenantId},</if>
+            <if test="comment != null and comment != ''">#{comment},</if>
+            <if test="commentTime != null">#{commentTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateComment" parameterType="Comment">
+        update t_comment
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="homeId != null">home_id = #{homeId},</if>
+            <if test="tenantId != null">tenant_id = #{tenantId},</if>
+            <if test="comment != null and comment != ''">comment = #{comment},</if>
+            <if test="commentTime != null">comment_time = #{commentTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteCommentById" parameterType="Long">
+        delete from t_comment where id = #{id}
+    </delete>
+
+    <delete id="deleteCommentByIds" parameterType="String">
+        delete from t_comment where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

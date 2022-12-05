@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>实名认证</title>
+    <style>
+        form{
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            margin: 20px;
+        }
+        .form-div {
+            margin-bottom: 20px;
+        }
+        .hp-input{
+            height: 50px;
+            min-width: 400px;
+            border-radius: 5px;
+            outline: none;
+            border: 1px solid #a6a6a6;
+            letter-spacing: 1px;
+            padding-left: 12px;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .form-div>label {
+            width: 100px;
+            text-align: right;
+        }
+        .form-div>input[type="button"] {
+            padding: 15px 35px;
+            border: navajowhite;
+            background-color: #2196f3;
+            color: white;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+<form>
+    <div class="form-div">
+        <h1>实名认证</h1>
+    </div>
+    <div class="form-div">
+        <label>姓名：</label>
+        <input class="hp-input" name="fullName">
+    </div>
+    <div class="form-div">
+        <label>身份证号：</label>
+        <input class="hp-input" name="idNumber">
+    </div>
+    <div class="form-div">
+        <input type="button" value="认证" class="hp-bt">
+    </div>
+</form>
+
+<script>
+    $(function () {
+        $('.hp-bt').click(function () {
+            let data = $('form').serialize();
+            $.post('/yunhome/tenant/authentication', data, function () {
+                layer.msg('认证成功', {icon: 1});
+            })
+        })
+    })
+</script>
+</body>
+</html>

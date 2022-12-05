@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns="http://www.thymeleaf.org">
+
+<head>
+	<meta charset="UTF-8">
+	<title>云+-房屋详情信息</title>
+	<link rel="stylesheet" href="lib/sliderPro/slider-pro.min.css" />
+	<script src="lib/sliderPro/jquery.sliderPro.min.js"></script>
+</head>
+
+<body>
+
+<div class="hp-container">
+	<div class="hp-detail-body am-container" style="">
+		<div class="am-u-sm-12">
+			<div class="am-u-sm-10" style="margin-left: -163px;">
+				<!-- 房屋标题-区域 -->
+				<div class="hp-detail-mark-area">
+					<div class="am-g">
+						<span class="hp-detail-title" th:text="${home.title}"></span>
+					</div>
+					<div class="am-g hp-detail-title-address">
+						<span><span th:text="${home.city}"></span> ></span>
+						<span th:text="${home.address}"></span>
+					</div>
+				</div>
+				<!-- 房屋图片-区域 -->
+				<div class="hp-detail-imgs-area">
+					<div id="slider-pro" class="slider-pro">
+						<div class="sp-slides">
+							<div class="sp-slide" th:each="url : ${home.imgs.split(',')}">
+								<img class="sp-image" th:src="${url}" />
+							</div>
+						</div>
+						<div class="sp-thumbnails">
+							<img class="sp-thumbnail" th:each="url : ${home.imgs.split(',')}" th:src="${url}"/>
+						</div>
+					</div>
+				</div>
+				<!-- 房屋信息介绍-区域 -->
+				<div class="hp-detail-info-area">
+					<div class="am-cf hp-info-box">
+						<div class="am-fl" style="width: 122px;">
+							<div class="box-title"><i class="hp-icon-fwsm"></i>
+								<p>房屋说明</p>
+							</div>
+						</div>
+						<div class="am-fl" style="width: 600px;">
+							<div class="hp-box-content">
+								<span th:text="${home.homeExplain}"></span>
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="hp-detail-info-area">
+					<div class="am-cf hp-info-box">
+						<div class="am-fl">
+							<div class="box-title"><i class="hp-icon-ptss"></i>
+								<p>配套设施</p>
+							</div>
+						</div>
+						<div class="am-fl">
+							<div class="hp-box-content">
+								<span th:text="${home.facilities}"></span><br />
+							</div>
+						</div>
+					</div>
+
+				</div>
+				<div class="hp-detail-info-area">
+					<div class="am-cf hp-info-box">
+						<div class="am-fl">
+							<div class="box-title"><i class="hp-icon-jtqk"></i>
+								<p>交通情况</p>
+							</div>
+						</div>
+						<div class="am-fl">
+							<div class="hp-box-content">
+								<span th:text="${home.trafficConditions}"></span></div>
+						</div>
+					</div>
+				</div>
+				<div class="am-g">
+					<div id="allmap" style="width: 737px;height: 500px;margin-top: 10px;">
+					</div>
+				</div>
+
+				<div class="hp-comment-area">
+
+					<div class="am-g hp-comment-area-top">
+						<div class="hp-comment-area-top-mark">评论</div>
+					</div>
+
+					<div class="am-g hp-comment-item" th:each="comment : ${list}">
+						<div class="am-u-sm-2">
+							<img width="80px" height="80px" th:src="'http://localhost:8080/profile/tenant/'+${comment.img}" class="am-circle" />
+							<span class="hp-comment-name" th:text="${comment.nickName}"></span>
+						</div>
+						<div class="am-u-sm-10">
+							<div>
+								<span class="hp-comment-time" th:text="${#temporals.format(comment.commentTime,'yyyy-MM-dd HH:mm:ss')}"></span><br />
+								<span th:text="${comment.comment}"></span>
+							</div>
+						</div>
+					</div>
+					<div class="am-g hp-comment-item">
+						<textarea placeholder="填写评论" class="" style="width: 600px;" rows="5" id="comment"></textarea>
+						<a class="am-btn am-btn-danger" style="margin-top: 50px;margin-left: 20px;" id="addComment">发表</a>
+					</div>
+
+				</div>
+
+			</div>
+			<div class="am-u-sm-2 hp-detail-price-area">
+				<div class="hp-detail-price">
+					<div class="am-g">
+						<span class="price-span" th:text="${home.money}"> </span>
+					</div>
+					<div class="am-g">
+						<div class="hp-price-btn">
+							<button type="button" class="am-btn am-btn-danger am-btn-block" id="qy">签约</button>
+						</div>
+					</div>
+					<div class="am-g">
+						<div class="">
+							<div class=" hp-img-person">
+								<img width="200px" height="200px" th:src="'http://localhost:8080'+${home.avatar}" />
+							</div>
+							<div class="hp-name">
+								<p class="name" th:text="${home.userName}"></p>
+							</div>
+						</div>
+					</div>
+					<div class="am-g hp-im-chat">
+						<a>在线聊天</a>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div style="margin-bottom: 100px;"></div>
+
+</div>
+<script type="text/javascript">
+	// 房屋轮播图片
+	$('#slider-pro').sliderPro({
+		width: 737, //宽度
+		height: 420, //高度
+		fade: true, //是否使用淡入淡出效果
+		arrows: true, //是否显示箭头导航按钮
+		fadeArrows: false, //是否在鼠标滑过时淡入淡出显示箭头按钮
+		buttons: false, //是否插件圆点导航按钮
+		thumbnailArrows: true, //设置缩略图的箭头按钮是否可用
+		fadeThumbnailArrows: false, //缩略图的箭头按钮是否淡入淡出
+		autoplay: true, //设置幻灯片是否自动播放
+		//autoplayDelay：5000,//设置幻灯片自动播放的时间间隔，单位毫秒 默认值：5000
+	});
+
+	var pointer ='[[${home.pointer}]]';
+	let pointArr = pointer.split(",");
+
+	// 百度地图API功能
+	var map = new BMap.Map("allmap");
+	var point = new BMap.Point(pointArr[0], pointArr[1]);
+	var marker = new BMap.Marker(point); // 创建标注
+	map.addOverlay(marker);
+
+	marker.enableDragging(); //开启拖拽
+	marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+	map.centerAndZoom(point, 15);
+
+
+	$(function () {
+		$('#addComment').click(function () {
+			//评论内容
+			let comment = $('#comment').val();
+			//房源id
+			let homeId = [[${home.id}]];
+
+			$(".home-container").load('yunhome/comment/add?comment='+comment+"&homeId="+homeId);
+		})
+
+		//签约点击事件
+		$('#qy').click(function () {
+			let homeId = [[${home.id}]];
+			let userId = [[${home.userId}]];
+
+			layer.open({
+				type: 2,
+				title: '签约',
+				shadeClose: true,
+				shade: false,
+				maxmin: true, //开启最大化最小化按钮
+				area: ['1000px', '800px'],
+				content: '/yunhome/home/signingPage?homeId='+homeId + "&userId="+userId
+			});
+		})
+	})
+
+
+</script>
+
+</body>
+
+</html>

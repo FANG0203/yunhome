@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mrfang.yunhome.mapper.TenantMapper">
+    
+    <resultMap type="Tenant" id="TenantResult">
+        <result property="id"    column="id"    />
+        <result property="nickname"    column="nickname"    />
+        <result property="username"    column="username"    />
+        <result property="password"    column="password"    />
+        <result property="fullName"    column="full_name"    />
+        <result property="idNumber"    column="id_number"    />
+        <result property="tel"    column="tel"    />
+        <result property="img"    column="img"    />
+        <result property="tenantExplain"    column="tenant_explain"    />
+    </resultMap>
+
+    <sql id="selectTenantVo">
+        select id, nickname, username, password, full_name, id_number, tel, img, tenant_explain from t_tenant
+    </sql>
+
+    <select id="selectTenantList" parameterType="Tenant" resultMap="TenantResult">
+        <include refid="selectTenantVo"/>
+        <where>  
+            <if test="id != null "> and id = #{id}</if>
+            <if test="nickname != null  and nickname != ''"> and nickname like concat('%', #{nickname}, '%')</if>
+            <if test="username != null  and username != ''"> and username = #{username}</if>
+            <if test="password != null  and password != ''"> and password = #{password}</if>
+            <if test="fullName != null  and fullName != ''"> and full_name like concat('%', #{fullName}, '%')</if>
+            <if test="idNumber != null "> and id_number = #{idNumber}</if>
+            <if test="tel != null  and tel != ''"> and tel = #{tel}</if>
+            <if test="img != null  and img != ''"> and img = #{img}</if>
+            <if test="tenantExplain != null  and tenantExplain != ''"> and tenant_explain = #{tenantExplain}</if>
+        </where>
+    </select>
+    
+    <select id="selectTenantById" parameterType="Long" resultMap="TenantResult">
+        <include refid="selectTenantVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertTenant" parameterType="Tenant" useGeneratedKeys="true" keyProperty="id">
+        insert into t_tenant
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="nickname != null and nickname != ''">nickname,</if>
+            <if test="username != null and username != ''">username,</if>
+            <if test="password != null and password != ''">password,</if>
+            <if test="fullName != null">full_name,</if>
+            <if test="idNumber != null">id_number,</if>
+            <if test="tel != null and tel != ''">tel,</if>
+            <if test="img != null">img,</if>
+            <if test="tenantExplain != null">tenant_explain,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="nickname != null and nickname != ''">#{nickname},</if>
+            <if test="username != null and username != ''">#{username},</if>
+            <if test="password != null and password != ''">#{password},</if>
+            <if test="fullName != null">#{fullName},</if>
+            <if test="idNumber != null">#{idNumber},</if>
+            <if test="tel != null and tel != ''">#{tel},</if>
+            <if test="img != null">#{img},</if>
+            <if test="tenantExplain != null">#{tenantExplain},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTenant" parameterType="Tenant">
+        update t_tenant
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="nickname != null and nickname != ''">nickname = #{nickname},</if>
+            <if test="username != null and username != ''">username = #{username},</if>
+            <if test="password != null and password != ''">password = #{password},</if>
+            <if test="fullName != null">full_name = #{fullName},</if>
+            <if test="idNumber != null">id_number = #{idNumber},</if>
+            <if test="tel != null and tel != ''">tel = #{tel},</if>
+            <if test="img != null">img = #{img},</if>
+            <if test="tenantExplain != null">tenant_explain = #{tenantExplain},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTenantById" parameterType="Long">
+        delete from t_tenant where id = #{id}
+    </delete>
+
+    <delete id="deleteTenantByIds" parameterType="String">
+        delete from t_tenant where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="getSignRecord" resultType="HomeSignExt">
+        select d1.dict_label hireModeStr, d2.dict_label homeTypeStr, d3.dict_label signContractStatus, h.*, sc.* from t_home h
+        left join t_sign_contract sc on sc.home_id = h.id
+        left join sys_dict_data d1 on h.hire_mode = d1.dict_value and d1.dict_type = 't_home_pay_mode'
+        left join sys_dict_data d2 on h.home_type = d2.dict_value and d2.dict_type = 't_home_home_type'
+        left join sys_dict_data d3 on sc.status= d3.dict_value and d3.dict_type = 't_sign_contract_status'
+        where sc.tenant_id = #{tenantId}
+        order by sc.start_time desc
+            limit #{page}, #{pageSize}
+    </select>
+
+    <select id="getSignRecordCount" resultType="long">
+        select count(h.id) from t_home h
+        left join t_sign_contract sc on sc.home_id = h.id
+        where sc.tenant_id = #{tenantId}
+    </select>
+
+    <select id="getMyComment" resultType="HomeCommentExt">
+        SELECT h.id home_id, h.title, h.imgs, c.comment, c.comment_time from t_home h
+        left join t_comment c on c.home_id = h.id
+        where c.tenant_id = #{tenantId}
+        order by c.comment_time desc
+            limit #{page}, #{pageSize}
+    </select>
+
+    <select id="getMyCommentCount" resultType="long">
+        SELECT count(h.id) from t_home h
+        left join t_comment c on c.home_id = h.id
+        where c.tenant_id = #{tenantId}
+    </select>
+</mapper>

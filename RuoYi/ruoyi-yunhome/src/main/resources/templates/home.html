@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!-- Swiper -->
+<div class="swiper-container" STYLE="height: 100%">
+    <div class="swiper-wrapper" STYLE="height: 100%">
+        <div class="swiper-slide" style="background-image:url(img/index/1.jpg);background-repeat: no-repeat;"></div>
+        <div class="swiper-slide" style="background-image:url(img/index/2.jpg);background-repeat: no-repeat;"></div>
+        <div class="swiper-slide" style="background-image:url(img/index/3.jpg);background-repeat: no-repeat;"></div>
+        <div class="swiper-slide" style="background-image:url(img/index/4.jpg);background-repeat: no-repeat;"></div>
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination" STYLE="height: 100%"></div>
+</div>
+
+<!-- Swiper JS -->
+<script src="lib/swiper/js/swiper.min.js"></script>
+
+<!-- Initialize Swiper -->
+<script>
+    var swiper = new Swiper('.swiper-container', {
+        pagination: '.swiper-pagination',
+        direction: 'vertical',
+        slidesPerView: 1,
+        paginationClickable: true,
+        spaceBetween: 30,
+        mousewheelControl: true,
+        //loop:true
+    });
+</script>
+</body>
+</html>
